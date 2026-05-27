@@ -1,6 +1,6 @@
 from app.db.db import get_connection
 
-
+#crete table
 def create_trades_table():
 
     conn = get_connection()
@@ -48,3 +48,39 @@ def create_trades_table():
     conn.close()
 
     return "Trades Table Created"
+
+
+
+def get_open_trades():
+
+    try:
+
+        conn = get_connection()
+
+        cursor = conn.cursor()
+
+        # =========================
+        # FETCH OPEN TRADES
+        # =========================
+
+        cursor.execute("""
+
+        SELECT *
+
+        FROM trades
+
+        WHERE status = 'OPEN'
+
+        """)
+
+        trades = cursor.fetchall()
+
+        conn.close()
+
+        return trades
+
+    except Exception as e:
+
+        print(f"Get Open Trades Error: {e}")
+
+        return []

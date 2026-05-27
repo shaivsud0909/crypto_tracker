@@ -48,5 +48,5 @@ def get_latest_crypto_data(symbol):
         return df
     
     except Exception as e:
-        return e
+        return None
 
