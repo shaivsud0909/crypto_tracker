@@ -1,0 +1,55 @@
+def verify_trade(signal, entry, stop_loss, future_df):
+
+    risk = abs(entry - stop_loss)
+
+    # =========================
+    # TARGET CALCULATION
+    # =========================
+
+    if signal == "LONG":
+        target = entry + (risk * 2)
+
+    elif signal == "SHORT":
+        target = entry - (risk * 2)
+
+    else:
+        return "NO TRADE"
+
+    # =========================
+    # CHECK FUTURE CANDLES
+    # =========================
+
+    for _, candle in future_df.iterrows():
+
+        high = candle['high']
+        low = candle['low']
+
+        # =========================
+        # LONG CHECK
+        # =========================
+
+        if signal == "LONG":
+
+            # Stop Loss Hit First
+            if low <= stop_loss:
+                return "STOP LOSS HIT"
+
+            # Target Hit
+            if high >= target:
+                return "TARGET HIT"
+
+        # =========================
+        # SHORT CHECK
+        # =========================
+
+        elif signal == "SHORT":
+
+            # Stop Loss Hit First
+            if high >= stop_loss:
+                return "STOP LOSS HIT"
+
+            # Target Hit
+            if low <= target:
+                return "TARGET HIT"
+
+    return "NO RESULT"
