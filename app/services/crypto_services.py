@@ -1,6 +1,8 @@
 from app.schema import TradeRequest
 from app.crypto.pipeline import pipeline_fun
 from app.db.save import save_trade
+from app.db.trades import get_open_trades
+from app.crypto.monitor import monitor_open_trades
 
 
 
@@ -9,14 +11,15 @@ def check_trade_opportunity(request: TradeRequest):
 
     result = pipeline_fun(request.symbol)
 
-    # No Signal
     if result is None:
 
         return {
             "message": "No Trade Opportunity"
         }
     
-    # Trade Generated
+
+    save_trade(result)
+
     return {
 
         "message": "Trade Generated",
@@ -25,16 +28,19 @@ def check_trade_opportunity(request: TradeRequest):
     }
 
 
-def trade_executed_result(request: TradeRequest):
+def trade_executed_result():
 
-    result = pipeline_fun(request.symbol)
+    open_trades=get_open_trades()
 
-    # No Signal
-    if result is None:
+    results=monitor_open_trades(open_trades)
 
-        return 
-            
-    save_trade(result)
+    return results
+
+
+
+
+
+
 
     
 

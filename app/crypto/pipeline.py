@@ -1,8 +1,6 @@
-import pandas as pd
-
-from app.crypto import verify_trade
 from app.crypto.ema import calculate_ema
 from app.crypto.fetch_data import get_latest_crypto_data
+from app.crypto.genrate_signal import generate_signal
 
 def pipeline_fun(symbol):
         
@@ -11,6 +9,8 @@ def pipeline_fun(symbol):
         df = get_latest_crypto_data(symbol)
 
         df = calculate_ema(df)
+
+        print(df)
 
         previous = df.iloc[-2]
         current = df.iloc[-1]
@@ -23,32 +23,16 @@ def pipeline_fun(symbol):
 
         entry = current['close']
 
-        # =========================
-        # LONG
-        # =========================
+        trade_setup = generate_signal(previous,current,good_volume)
 
-        if ( previous['ema9'] < previous['ema21'] and current['ema9'] > current['ema21'] and good_volume ):
+        print(trade_setup)
 
-            signal = "LONG"
-
-            sl = current['low']
-
-        # =========================
-        # SHORT
-        # =========================
-
-        elif ( previous['ema9'] > previous['ema21'] and current['ema9'] < current['ema21'] and good_volume ):
-
-            signal = "SHORT"
-
-            sl = current['high']
-
-        # =========================
-        # NO SIGNAL
-        # =========================
-
-        if signal is None:
+        if trade_setup is None:
             return None
+        
+        signal = trade_setup["signal"]
+
+        sl = trade_setup["sl"]
 
         # =========================
         # TARGET

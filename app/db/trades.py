@@ -84,3 +84,72 @@ def get_open_trades():
         print(f"Get Open Trades Error: {e}")
 
         return []
+
+
+def update_trade_status(
+    trade_id,
+    status,
+    hit,
+    exit_price,
+    exit_time,
+    pnl
+):
+
+    try:
+
+        conn = get_connection()
+
+        cursor = conn.cursor()
+
+        cursor.execute("""
+
+        UPDATE trades
+
+        SET
+
+            status = ?,
+
+            hit = ?,
+
+            exit_price = ?,
+
+            exit_time = ?,
+
+            pnl = ?
+
+        WHERE id = ?
+
+        """, (
+
+            status,
+            hit,
+            exit_price,
+            exit_time,
+            pnl,
+            trade_id
+
+        ))
+
+        conn.commit()
+
+        rows_updated = cursor.rowcount
+
+        conn.close()
+
+        return {
+
+            "success": True,
+
+            "rows_updated": rows_updated
+
+        }
+
+    except Exception as e:
+
+        return {
+
+            "success": False,
+
+            "message": str(e)
+
+        }
