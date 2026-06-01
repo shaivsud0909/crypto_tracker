@@ -1,0 +1,13 @@
+[project]
+name = "cryot-script"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "apscheduler>=3.11.2",
+    "ccxt>=4.5.54",
+    "fastapi>=0.136.1",
+    "pandas>=3.0.3",
+    "uvicorn>=0.47.0",
+]
