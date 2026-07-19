@@ -2,24 +2,17 @@ FROM python:3.13-slim
 
 WORKDIR /app
 
-RUN pip install uv
+# Install uv
+RUN pip install  uv
 
+# Copy project files
 COPY . .
 
+# Install dependencies
 RUN uv sync
 
+# Expose FastAPI port
 EXPOSE 8000
 
-FROM python:3.13-slim
-
-WORKDIR /app
-
-RUN pip install uv
-
-COPY . .
-
-RUN uv sync
-
-EXPOSE 8000
-
+# Start FastAPI
 CMD ["uv", "run", "python", "app.py"]

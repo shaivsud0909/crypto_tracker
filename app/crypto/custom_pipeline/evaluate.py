@@ -65,4 +65,12 @@ def evaluate_trades(json_file="signals.json"):
     print(f"Losses : {losses}")
     print(f"Open   : {open_trades}")
 
-    return results
+    return {
+        "summary": {
+            "wins": wins,
+            "losses": losses,
+            "open": open_trades,
+            "total": len(results)
+        },
+        "trades": results
+    }
